@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">IOT app</string>
+    <string name="config_title">Configurations</string>
+    <string name="ip_address_text">Adresse IP</string>
+    <string name="port_text">Port</string>
+    <string name="sensor_data_title">Données affichées</string>
+    <string name="luminosity_text">Luminosité</string>
+    <string name="temperature_text">Température</string>
+</resources>
