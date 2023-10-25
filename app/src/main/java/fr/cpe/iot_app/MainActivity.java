@@ -1,7 +1,6 @@
 package fr.cpe.iot_app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,8 +12,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
-
-import fr.cpe.iot_app.threads.TalkThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,24 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         element1.setText(sensorValues.get("L"));
         element2.setText(sensorValues.get("T"));
-
-        /* initNetwork();
-
-        ListenThreadEventListener listener = data -> runOnUiThread(() -> textReceived.setText(String.format("Response: %s", data)));
-        ListenThread listenThread = new ListenThread(listener, UDPSocket);
-        listenThread.start();
-
-        buttonSend.setOnClickListener(v -> {
-            String message = textToSend.getText().toString();
-            String portString = portField.getText().toString();
-            try {
-                int port = Integer.parseInt(portString);
-                TalkThread talkThread = new TalkThread(message, UDPSocket, address, port);
-                talkThread.start();
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }); */
     }
 
     private void initNetwork() {
