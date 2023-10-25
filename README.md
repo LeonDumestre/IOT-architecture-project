@@ -1,2 +1,1 @@
-"# Android-udp-sensor" 
-"# Android-udp-sensor" 
+# Project Android Sensor UDP
