@@ -42,7 +42,10 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
                                 sql = ''' SELECT * FROM data WHERE time = (SELECT MAX(time) FROM data)'''
                                 cursor.execute(sql)
                                 rows = cursor.fetchall()
-                                sendAndroidMessage(str(rows[0]), self.client_address)
+                                if(len(rows) <= 0):
+                                    sendAndroidMessage(str(-1), self.client_address)
+                                else:
+                                    sendAndroidMessage(str(rows[0]), self.client_address)
                         else:
                                 print("Unknown message: ",data)
 
