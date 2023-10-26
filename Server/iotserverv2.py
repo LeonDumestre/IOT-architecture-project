@@ -13,9 +13,7 @@ import sqlite3
 HOST           = "0.0.0.0"
 UDP_PORT       = 10000
 MICRO_COMMANDS = ["TL" , "LT"]
-FILENAME        = "values.txt"
 DATABASE        = "dbiot.db"
-LAST_VALUE      = ""
 
 class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
 
@@ -107,10 +105,20 @@ if __name__ == '__main__':
                 print("Server started at {} port {}".format(HOST, UDP_PORT))
                 while ser.isOpen() : 
                         if (ser.inWaiting() > 0): # if incoming bytes are waiting 
-                                data_str = ser.read(ser.inWaiting()) 
-                                f.write(data_str)
-                                LAST_VALUE = data_str
-                                print(data_str)
+                                data_str = ser.read(ser.inWaiting())
+                                stringtab = data_str.split(";")
+                                temperature = stringtab[0]
+                                light = stringtab[1]
+                                currenttime = time.time()
+
+                                con = sqlite3.connect('dbiot.db')
+                                cursor = con.cursor()
+                                sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
+                                data_tuple = (temperature, light, currenttime)
+                                cursor.execute(sql, data_tuple)
+                                con.commit()
+                                cursor.close()
+                                con.close()
         except (KeyboardInterrupt, SystemExit):
                 server.shutdown()
                 server.server_close()
