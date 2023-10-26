@@ -110,7 +110,6 @@ if __name__ == '__main__':
                                 temperature = stringtab[0]
                                 light = stringtab[1]
                                 currenttime = time.time()
-
                                 con = sqlite3.connect('dbiot.db')
                                 cursor = con.cursor()
                                 sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
