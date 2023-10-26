@@ -52,8 +52,14 @@ public class MainActivity extends AppCompatActivity {
         Button configButton = findViewById(R.id.config_button);
         Button swapButton = findViewById(R.id.swap_button);
 
-        configButton.setOnClickListener(v -> initNetwork());
-        swapButton.setOnClickListener(this::exchangeElements);
+        configButton.setOnClickListener(v -> {
+            initNetwork();
+            sendToast("Initialisation du réseau");
+        });
+        swapButton.setOnClickListener(v -> {
+            exchangeElements();
+            sendToast("Changement envoyé");
+        });
     }
 
     public void initNetwork() {
@@ -70,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
     private void initReceiver() {
         ListenThreadEventListener listener = data -> runOnUiThread(() -> {
             Log.e("MainActivity", "Received data: " + data);
+            sendToast(data);
         });
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
         listenThread.start();
     }
 
-    public void exchangeElements(View view) {
+    public void exchangeElements() {
         String text1 = element1.getText().toString();
         String text2 = element2.getText().toString();
 
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         String sensorAbbreviation1 = getKeyByValue(sensorValues, text2);
         String sensorAbbreviation2 = getKeyByValue(sensorValues, text1);
 
-        String message = sensorAbbreviation1 + sensorAbbreviation2;
+        String message = sensorAbbreviation1 +  ";" + sensorAbbreviation2;
         sendMessage(message);
     }
 
@@ -109,4 +116,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    private void sendToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 }

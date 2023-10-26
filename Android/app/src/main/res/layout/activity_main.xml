@@ -34,7 +34,7 @@
             android:inputType="text"
             android:layout_marginEnd="2dp"
             android:hint="@string/ip_address_text" />
-s
+
         <EditText
             android:id="@+id/port"
             android:layout_width="0dp"
@@ -50,7 +50,7 @@ s
         android:id="@+id/config_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/run_network_text"
+        android:text="@string/init_network_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/config_data" />
