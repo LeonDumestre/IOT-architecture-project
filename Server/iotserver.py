@@ -13,7 +13,7 @@ FILENAME = "values.txt"
 LAST_VALUE = ""
 
 # send serial message 
-SERIALPORT = "/dev/ttyACM0 "
+SERIALPORT = "/dev/ttyACM0"
 BAUDRATE = 115200
 IP = "127.0.0.1"
 PORT = 10000
@@ -61,6 +61,7 @@ def main():
                 con.commit()
                 cursor.close()
 
+                sendAndroidMessage(data_str, addr)
                 f.write(data_str)
                 LAST_VALUE = data_str
                 print(data_str)
@@ -101,6 +102,10 @@ def initUART():
 def sendUARTMessage(msg):
     ser.write(msg)
     print("Message <" + msg + "> sent to micro-controller." )
+
+def sendAndroidMessage(msg, addr):
+    sock.sendto(msg, addr)
+    print("Message <" + msg + "> sent to Android." )
 
 # Main program logic follows:
 if __name__ == '__main__':
