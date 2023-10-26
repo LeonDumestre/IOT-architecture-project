@@ -1,6 +1,7 @@
 package fr.cpe.iot_app.threads;
 
-import java.io.IOException;
+import android.util.Log;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -28,7 +29,7 @@ public class TalkThread extends Thread {
             byte[] data = message.getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
             UDPSocket.send(packet);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
