@@ -42,7 +42,7 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
                                 sql = ''' SELECT * FROM data WHERE time = (SELECT MAX(time) FROM data)'''
                                 cursor.execute(sql)
                                 rows = cursor.fetchall()
-                                # TODO: Send rows to Android application    
+                                sendAndroidMessage(str(rows[0]), self.client_address)
                         else:
                                 print("Unknown message: ",data)
 
@@ -82,6 +82,10 @@ def initUART():
 def sendUARTMessage(msg):
     ser.write(msg)
     print("Message <" + msg + "> sent to micro-controller." )
+
+def sendAndroidMessage(msg, addr):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.sendto(msg.encode(), addr)
 
 
 # Main program logic follows:
