@@ -34,7 +34,7 @@
             android:inputType="text"
             android:layout_marginEnd="2dp"
             android:hint="@string/ip_address_text" />
-
+s
         <EditText
             android:id="@+id/port"
             android:layout_width="0dp"
@@ -46,6 +46,15 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/config_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/run_network_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/config_data" />
+
     <TextView
         android:id="@+id/sensor_order_title"
         android:layout_width="wrap_content"
@@ -56,7 +65,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginStart="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/config_data" />
+        app:layout_constraintTop_toBottomOf="@+id/config_button" />
 
     <LinearLayout
         android:id="@+id/sensor_order_data"
@@ -88,7 +97,6 @@
         android:id="@+id/swap_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="exchangeElements"
         android:text="Échanger"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

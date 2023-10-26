@@ -14,7 +14,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10defb6c-5f7d-42b8-bc24-f34b969e6e7a" name="Default Changelist" comment="" />
+    <list default="true" id="10defb6c-5f7d-42b8-bc24-f34b969e6e7a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,6 +58,7 @@
     <property name="android-custom-viewC:/Users/leond/AppData/Local/Android/Sdk/sources/android-33/android/widget/EditText.java_EditText_DIMENSIONS" value="1080&#10;1920" />
     <property name="android-custom-viewC:/Users/leond/AppData/Local/Android/Sdk/sources/android-33/android/widget/EditText.java_SELECTED" value="EditText" />
     <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Android-app" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />

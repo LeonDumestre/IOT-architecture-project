@@ -1,17 +1,23 @@
 package fr.cpe.iot_app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
+
+import fr.cpe.iot_app.threads.ListenThread;
+import fr.cpe.iot_app.threads.ListenThreadEventListener;
+import fr.cpe.iot_app.threads.TalkThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText ipAddressField;
     private EditText portField;
-
-    private String currentIpAddress = "";
 
     private TextView element1;
     private TextView element2;
@@ -44,18 +48,31 @@ public class MainActivity extends AppCompatActivity {
 
         element1.setText(sensorValues.get("L"));
         element2.setText(sensorValues.get("T"));
+
+        Button configButton = findViewById(R.id.config_button);
+        Button swapButton = findViewById(R.id.swap_button);
+
+        configButton.setOnClickListener(v -> initNetwork());
+        swapButton.setOnClickListener(this::exchangeElements);
     }
 
-    private void initNetwork() {
+    public void initNetwork() {
         try {
             UDPSocket = new DatagramSocket();
             String ipAddress = ipAddressField.getText().toString();
             address = InetAddress.getByName(ipAddress);
-
-            currentIpAddress = ipAddress;
-        } catch (IOException e) {
+            initReceiver();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void initReceiver() {
+        ListenThreadEventListener listener = data -> runOnUiThread(() -> {
+            Log.e("MainActivity", "Received data: " + data);
+        });
+        ListenThread listenThread = new ListenThread(listener, UDPSocket);
+        listenThread.start();
     }
 
     public void exchangeElements(View view) {
@@ -73,10 +90,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String message) {
-        if (!currentIpAddress.equals(ipAddressField.getText().toString())) {
-            initNetwork();
-        }
-
         String portString = portField.getText().toString();
         try {
             int port = Integer.parseInt(portString);

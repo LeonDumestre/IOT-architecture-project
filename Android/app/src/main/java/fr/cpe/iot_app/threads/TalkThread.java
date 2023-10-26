@@ -1,4 +1,4 @@
-package fr.cpe.iot_app;
+package fr.cpe.iot_app.threads;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
