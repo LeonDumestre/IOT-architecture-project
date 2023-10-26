@@ -6,5 +6,5 @@
     <string name="sensor_data_title">Données affichées</string>
     <string name="luminosity_text">Luminosité</string>
     <string name="temperature_text">Température</string>
-    <string name="run_network_text">Lancer le réseau</string>
+    <string name="init_network_text">Initialiser le réseau</string>
 </resources>
