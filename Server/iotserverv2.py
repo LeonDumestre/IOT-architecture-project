@@ -8,11 +8,13 @@ import socket
 import socketserver
 import serial
 import threading
+import sqlite3
 
 HOST           = "0.0.0.0"
 UDP_PORT       = 10000
 MICRO_COMMANDS = ["TL" , "LT"]
 FILENAME        = "values.txt"
+DATABASE        = "dbiot.db"
 LAST_VALUE      = ""
 
 class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
@@ -24,11 +26,23 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
         print("{}: client: {}, wrote: {}".format(current_thread.name, self.client_address, data))
         if data != "":
                         if data in MICRO_COMMANDS: # Send message through UART
+                                con = sqlite3.connect('dbiot.db')
+                                cursor = con.cursor()
+                                sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
+                                data_tuple = ("LT", 1)
+                                cursor.execute(sql, data_tuple)
                                 sendUARTMessage(data)
+                                con.commit()
+                                cursor.close() 
+                                con.close()
                                 
                         elif data == "getValues()": # Sent last value received from micro-controller
-                                socket.sendto(LAST_VALUE, self.client_address) 
-                                # TODO: Create last_values_received as global variable      
+                                con = sqlite3.connect('dbiot.db')
+                                cursor = con.cursor()
+                                sql = ''' SELECT * FROM data WHERE time = (SELECT MAX(time) FROM data)'''
+                                cursor.execute(sql)
+                                rows = cursor.fetchall()
+                                # TODO: Send rows to Android application    
                         else:
                                 print("Unknown message: ",data)
 
@@ -85,7 +99,6 @@ if __name__ == '__main__':
                 server_thread.start()
                 print("Server started at {} port {}".format(HOST, UDP_PORT))
                 while ser.isOpen() : 
-                        # time.sleep(100)
                         if (ser.inWaiting() > 0): # if incoming bytes are waiting 
                                 data_str = ser.read(ser.inWaiting()) 
                                 f.write(data_str)
