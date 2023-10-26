@@ -92,7 +92,6 @@ def sendAndroidMessage(msg, addr):
 # Main program logic follows:
 if __name__ == '__main__':
         initUART()
-        f= open(FILENAME,"a")
         print ('Press Ctrl-C to quit.')
 
         server = ThreadedUDPServer((HOST, UDP_PORT), ThreadedUDPRequestHandler)
