@@ -20,7 +20,7 @@ public class AskValueThread extends Thread {
         while(true) {
             try {
                 sendMessage();
-                Thread.sleep(200);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

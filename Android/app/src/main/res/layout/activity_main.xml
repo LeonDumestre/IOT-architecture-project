@@ -102,4 +102,64 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sensor_order_data" />
 
+    <TextView
+        android:id="@+id/sensor_data_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/sensor_received_data_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swap_button" />
+
+    <LinearLayout
+        android:id="@+id/sensor_luminosity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/sensor_data_title">
+
+        <TextView
+            android:id="@+id/luminosity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/luminosity_text"
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/luminosity_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16%"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sensor_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/sensor_luminosity">
+
+        <TextView
+            android:id="@+id/temperature_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temperature_text"
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/temperature_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23°C"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

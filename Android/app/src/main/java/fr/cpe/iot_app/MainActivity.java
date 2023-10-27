@@ -2,7 +2,6 @@ package fr.cpe.iot_app;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView element1;
     private TextView element2;
 
+    private TextView luminosityValue;
+    private TextView temperatureValue;
+
     private final Map<String, String> sensorValues = new HashMap<>();
     AskValueThread askValueThread;
 
@@ -52,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         element1.setText(sensorValues.get("L"));
         element2.setText(sensorValues.get("T"));
 
+        luminosityValue = findViewById(R.id.luminosity_value);
+        temperatureValue = findViewById(R.id.temperature_value);
+
         Button configButton = findViewById(R.id.config_button);
         Button swapButton = findViewById(R.id.swap_button);
 
@@ -67,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void initNetwork() {
         try {
-            askValueThread.interrupt();
+            if (askValueThread != null) {
+                askValueThread.interrupt();
+            }
 
             String portString = portField.getText().toString();
             port = Integer.parseInt(portString);
@@ -85,7 +92,12 @@ public class MainActivity extends AppCompatActivity {
     private void initReceiver() {
         ListenThreadEventListener listener = data -> runOnUiThread(() -> {
             Log.e("MainActivity", "Received data: " + data);
-            sendToast(data);
+
+            String[] parts = data.split(";");
+            String[] parts1 = parts[0].split("\\(");
+            String[] parts2 = parts[1].split("\\)");
+            temperatureValue.setText(parts1[1] + "°C");
+            luminosityValue.setText(parts2[0] + "%");
         });
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
         listenThread.start();

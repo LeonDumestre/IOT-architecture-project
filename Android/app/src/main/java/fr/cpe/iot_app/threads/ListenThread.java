@@ -1,6 +1,7 @@
 package fr.cpe.iot_app.threads;
 
-import java.io.IOException;
+import android.widget.TextView;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
@@ -27,7 +28,7 @@ public class ListenThread extends Thread {
             UDPSocket.receive(packet);
             String message = new String(packet.getData(), 0, packet.getLength());
             listener.onEvent(message);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
