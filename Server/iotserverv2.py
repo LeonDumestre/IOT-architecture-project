@@ -10,7 +10,7 @@ import serial
 import threading
 import sqlite3
 
-HOST           = "0.0.0.0"
+HOST           = "192.168.1.232"
 UDP_PORT       = 10000
 MICRO_COMMANDS = ["TL" , "LT"]
 DATABASE        = "dbiot.db"

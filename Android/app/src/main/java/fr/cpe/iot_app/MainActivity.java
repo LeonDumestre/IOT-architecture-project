@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.cpe.iot_app.threads.AskValueThread;
 import fr.cpe.iot_app.threads.ListenThread;
 import fr.cpe.iot_app.threads.ListenThreadEventListener;
 import fr.cpe.iot_app.threads.TalkThread;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private InetAddress address; // Structure Java décrivant une adresse résolue
     private DatagramSocket UDPSocket; // Structure Java permettant d'accéder au réseau
+    private int port;
 
     private EditText ipAddressField;
     private EditText portField;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView element2;
 
     private final Map<String, String> sensorValues = new HashMap<>();
+    AskValueThread askValueThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void initNetwork() {
         try {
+            askValueThread.interrupt();
+
+            String portString = portField.getText().toString();
+            port = Integer.parseInt(portString);
+
             UDPSocket = new DatagramSocket();
             String ipAddress = ipAddressField.getText().toString();
             address = InetAddress.getByName(ipAddress);
             initReceiver();
+            initValueRequest();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
         });
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
         listenThread.start();
+    }
+
+    public void initValueRequest() {
+        askValueThread = new AskValueThread(UDPSocket, address, port);
+        askValueThread.start();
     }
 
     public void exchangeElements() {
@@ -97,14 +111,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String message) {
-        String portString = portField.getText().toString();
-        try {
-            int port = Integer.parseInt(portString);
-            TalkThread talkThread = new TalkThread(message, UDPSocket, address, port);
-            talkThread.start();
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        TalkThread talkThread = new TalkThread(message, UDPSocket, address, port);
+        talkThread.start();
     }
 
     private String getKeyByValue(Map<String, String> map, String value) {
