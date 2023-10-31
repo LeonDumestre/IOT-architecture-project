@@ -1,6 +1,3 @@
-# Program to control passerelle between Android application
-# and micro-controller through USB tty
-
 import time
 import socket
 import socketserver
@@ -8,10 +5,11 @@ import serial
 import threading
 import sqlite3
 
-HOST = "192.168.1.232"
+HOST = "192.168.1.23"
 UDP_PORT = 10000
-MICRO_COMMANDS = ["T;L", "L;T"]
+MICRO_COMMANDS = ["T;L~", "L;T~"]
 DATABASE = "dbiot.db"
+LAST_VALS = ""
 
 
 class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
@@ -23,29 +21,29 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
         current_thread = threading.current_thread()
         print("{}: client: {}, wrote: {}".format(current_thread.name, self.client_address, data))
         if data != "":
-            if data in MICRO_COMMANDS:  # Send message through UART
-                con = sqlite3.connect('dbiot.db')
-                cursor = con.cursor()
-                sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
-                strvar = data.split(";")
-                fullstr = strvar[0] + strvar[1]
-                data_tuple = (str(fullstr), str(1))
-                cursor.execute(sql, data_tuple)
+            if data == "getValues()":  # Sent last value received from micro-controller
+                sendAndroidMessage(LAST_VALS, self.client_address)
+                #con = sqlite3.connect('dbiot.db')
+                #cursor = con.cursor()
+                #sql = ''' SELECT * FROM data HAVING MAX(time) '''
+                #cursor.execute(sql)
+                #rows = cursor.fetchall()
+                #if (len(rows) <= 0):
+                #    sendAndroidMessage(str(-1), self.client_address)
+                #else:
+                #    sendAndroidMessage(str(rows[0]), self.client_address)
+            elif True:  # Send message through UART
+                #con = sqlite3.connect('dbiot.db')
+                #cursor = con.cursor()
+                #sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
+                #strvar = data.split(";")
+                #fullstr = strvar[0] + strvar[1]
+                #data_tuple = (str(fullstr), str(1))
+                #cursor.execute(sql, data_tuple)
                 sendUARTMessage(data)
-                con.commit()
-                cursor.close()
-                con.close()
-
-            elif data == "getValues()":  # Sent last value received from micro-controller
-                con = sqlite3.connect('dbiot.db')
-                cursor = con.cursor()
-                sql = ''' SELECT * FROM data WHERE time = (SELECT MAX(time) FROM data)'''
-                cursor.execute(sql)
-                rows = cursor.fetchall()
-                if (len(rows) <= 0):
-                    sendAndroidMessage(str(-1), self.client_address)
-                else:
-                    sendAndroidMessage(str(rows[0]), self.client_address)
+                #con.commit()
+                #cursor.close()
+                #con.close()
             else:
                 print("Unknown message: ", data)
 
@@ -55,7 +53,7 @@ class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
 
 
 # send serial message
-SERIALPORT = "/dev/ttyACM0"
+SERIALPORT = "/dev/ttyACM1"
 BAUDRATE = 115200
 ser = serial.Serial()
 
@@ -84,7 +82,7 @@ def initUART():
 
 
 def sendUARTMessage(msg):
-    ser.write(msg)
+    ser.write(str.encode(msg))
     print("Message <" + msg + "> sent to micro-controller.")
 
 
@@ -109,7 +107,8 @@ if __name__ == '__main__':
         while ser.isOpen():
             if ser.inWaiting() > 0:  # if incoming bytes are waiting
                 data_str = ser.read(ser.inWaiting())
-                print(data_str)
+                print(str(data_str))
+                LAST_VALS = str(data_str)
                 #stringtab = data_str.split(";")
                 #temperature = stringtab[0]
                 #light = stringtab[1]

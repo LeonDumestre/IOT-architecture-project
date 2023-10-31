@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,14 +91,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initReceiver() {
-        ListenThreadEventListener listener = data -> runOnUiThread(() -> {
+        ListenThreadEventListener listener = byte_data -> runOnUiThread(() -> {
+            String data = new String(byte_data.getBytes(), StandardCharsets.UTF_8);
             Log.e("MainActivity", "Received data: " + data);
 
+            if(data == null || data.isEmpty() || data.contains(" ") || data.equals("-1") || data.length() < 3) {
+                Log.e("MainActivity", "Error on server");
+                return;
+            }
+
             String[] parts = data.split(";");
-            String[] parts1 = parts[0].split("\\(");
-            String[] parts2 = parts[1].split("\\)");
-            temperatureValue.setText(parts1[1] + "°C");
-            luminosityValue.setText(parts2[0] + "%");
+            temperatureValue.setText(parts[1] + "°C");
+            luminosityValue.setText(parts[0] + "%");
         });
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
         listenThread.start();
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         String sensorAbbreviation1 = getKeyByValue(sensorValues, text2);
         String sensorAbbreviation2 = getKeyByValue(sensorValues, text1);
 
-        String message = sensorAbbreviation1 +  ";" + sensorAbbreviation2;
+        String message = sensorAbbreviation1 +  ";" + sensorAbbreviation2 + "~";
         sendMessage(message);
     }
 
