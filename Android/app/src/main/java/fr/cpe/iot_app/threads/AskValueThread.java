@@ -6,6 +6,9 @@ import java.net.InetAddress;
 
 public class AskValueThread extends Thread {
 
+    private static final int FIVE_SECONDS_IN_MS = 5000;
+    private static final String ASK_VALUE_CMD = "getValues()";
+
     private final int port;
     private final InetAddress address;
     private final DatagramSocket UDPSocket;
@@ -17,11 +20,14 @@ public class AskValueThread extends Thread {
     }
 
     public void run() {
-        while(true) {
+        while (true) {
             try {
                 sendMessage();
-                Thread.sleep(5000);
+                Thread.sleep(FIVE_SECONDS_IN_MS);
             } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -29,11 +35,17 @@ public class AskValueThread extends Thread {
 
     private void sendMessage() {
         try {
-            byte[] data = "getValues()".getBytes();
+            byte[] data = ASK_VALUE_CMD.getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
             UDPSocket.send(packet);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        if (UDPSocket != null && !UDPSocket.isClosed()) {
+            UDPSocket.close();
         }
     }
 }

@@ -31,4 +31,10 @@ public class TalkThread extends Thread {
             e.printStackTrace();
         }
     }
+
+    public void close() {
+        if (UDPSocket != null && !UDPSocket.isClosed()) {
+            UDPSocket.close();
+        }
+    }
 }

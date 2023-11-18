@@ -14,6 +14,8 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import fr.cpe.iot_app.threads.AskValueThread;
 import fr.cpe.iot_app.threads.ListenThread;
@@ -21,6 +23,10 @@ import fr.cpe.iot_app.threads.ListenThreadEventListener;
 import fr.cpe.iot_app.threads.TalkThread;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+    private static final String CELSIUS_SYMBOL = "°C";
+    private static final String PERCENTAGE_SYMBOL = "%";
 
     private InetAddress address; // Structure Java décrivant une adresse résolue
     private DatagramSocket UDPSocket; // Structure Java permettant d'accéder au réseau
@@ -38,11 +44,18 @@ public class MainActivity extends AppCompatActivity {
     private final Map<String, String> sensorValues = new HashMap<>();
     AskValueThread askValueThread;
 
+    private ExecutorService executorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUIComponents();
+        initButtons();
+    }
+
+    private void initUIComponents() {
         ipAddressField = findViewById(R.id.ip_address);
         portField = findViewById(R.id.port);
 
@@ -57,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
         luminosityValue = findViewById(R.id.luminosity_value);
         temperatureValue = findViewById(R.id.temperature_value);
+    }
 
+    private void initButtons() {
         Button configButton = findViewById(R.id.config_button);
         Button swapButton = findViewById(R.id.swap_button);
 
         configButton.setOnClickListener(v -> {
-            initNetwork();
+            runNetwork();
             sendToast("Initialisation du réseau");
         });
         swapButton.setOnClickListener(v -> {
@@ -71,18 +86,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void initNetwork() {
+    private void runNetwork() {
         try {
+            // stop askValueThread if running to set new network data
             if (askValueThread != null) {
                 askValueThread.interrupt();
             }
 
+            // get, format and set network data
             String portString = portField.getText().toString();
             port = Integer.parseInt(portString);
 
             UDPSocket = new DatagramSocket();
             String ipAddress = ipAddressField.getText().toString();
             address = InetAddress.getByName(ipAddress);
+
+            // run threads to get values and listen response
             initReceiver();
             initValueRequest();
         } catch (Exception e) {
@@ -91,45 +110,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initReceiver() {
+        // set listener executed when thread receives data
         ListenThreadEventListener listener = byte_data -> runOnUiThread(() -> {
+            // format received data
             String data = new String(byte_data.getBytes(), StandardCharsets.UTF_8);
-            Log.e("MainActivity", "Received data: " + data);
+            Log.e(TAG, "Received data: " + data);
 
-            if(data == null || data.isEmpty() || data.contains(" ") || data.equals("-1") || data.length() < 3) {
-                Log.e("MainActivity", "Error on server");
+            // check data integrity
+            if(data.isEmpty() || data.contains(" ") || data.equals("-1") || data.length() < 3) {
+                Log.e(TAG, "Error on server");
                 return;
             }
 
+            // split and set received data in UI components
             String[] parts = data.split(";");
-            temperatureValue.setText(parts[1] + "°C");
-            luminosityValue.setText(parts[0] + "%");
+            temperatureValue.setText(String.format("%s%s", parts[1], CELSIUS_SYMBOL));
+            luminosityValue.setText(String.format("%s%s", parts[0], PERCENTAGE_SYMBOL));
         });
+        
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
-        listenThread.start();
+        executorService.execute(listenThread);
     }
 
     public void initValueRequest() {
         askValueThread = new AskValueThread(UDPSocket, address, port);
-        askValueThread.start();
+        executorService.execute(askValueThread);
     }
 
     public void exchangeElements() {
+        // get current values
         String text1 = element1.getText().toString();
         String text2 = element2.getText().toString();
 
+        // exchange text view values
         element1.setText(text2);
         element2.setText(text1);
 
+        // get exchanges values
         String sensorAbbreviation1 = getKeyByValue(sensorValues, text2);
         String sensorAbbreviation2 = getKeyByValue(sensorValues, text1);
 
+        // format message to send
         String message = sensorAbbreviation1 +  ";" + sensorAbbreviation2 + "~";
         sendMessage(message);
     }
 
     private void sendMessage(String message) {
         TalkThread talkThread = new TalkThread(message, UDPSocket, address, port);
-        talkThread.start();
+        executorService.execute(talkThread);
     }
 
     private String getKeyByValue(Map<String, String> map, String value) {
@@ -143,5 +171,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        executorService = Executors.newCachedThreadPool();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        executorService.shutdownNow();
     }
 }
