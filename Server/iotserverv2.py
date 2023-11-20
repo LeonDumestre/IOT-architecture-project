@@ -113,6 +113,7 @@ if __name__ == '__main__':
             if ser.inWaiting() > 0:  # if incoming bytes are waiting
                 try:
                     data_str = ser.read(ser.inWaiting())
+                    data_str = str(data_str).split("'")[1]
                     print(str(data_str))
                     LAST_VALS = str(data_str)
                     stringtab = data_str.split(";")
