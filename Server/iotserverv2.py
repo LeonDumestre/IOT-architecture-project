@@ -22,28 +22,28 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
         print("{}: client: {}, wrote: {}".format(current_thread.name, self.client_address, data))
         if data != "":
             if data == "getValues()":  # Sent last value received from micro-controller
-                sendAndroidMessage(LAST_VALS, self.client_address)
-                #con = sqlite3.connect('dbiot.db')
-                #cursor = con.cursor()
-                #sql = ''' SELECT * FROM data HAVING MAX(time) '''
-                #cursor.execute(sql)
-                #rows = cursor.fetchall()
-                #if (len(rows) <= 0):
-                #    sendAndroidMessage(str(-1), self.client_address)
-                #else:
-                #    sendAndroidMessage(str(rows[0]), self.client_address)
+                #sendAndroidMessage(LAST_VALS, self.client_address)
+                con = sqlite3.connect('dbiot.db')
+                cursor = con.cursor()
+                sql = ''' SELECT * FROM data HAVING MAX(time) '''
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                if (len(rows) <= 0):
+                    sendAndroidMessage(str(-1), self.client_address)
+                else:
+                    sendAndroidMessage(str(rows[0]), self.client_address)
             elif True:  # Send message through UART
-                #con = sqlite3.connect('dbiot.db')
-                #cursor = con.cursor()
-                #sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
-                #strvar = data.split(";")
-                #fullstr = strvar[0] + strvar[1]
-                #data_tuple = (str(fullstr), str(1))
-                #cursor.execute(sql, data_tuple)
+                con = sqlite3.connect('dbiot.db')
+                cursor = con.cursor()
+                sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
+                strvar = data.split(";")
+                fullstr = strvar[0] + strvar[1]
+                data_tuple = (str(fullstr), str(1))
+                cursor.execute(sql, data_tuple)
                 sendUARTMessage(data)
-                #con.commit()
-                #cursor.close()
-                #con.close()
+                con.commit()
+                cursor.close()
+                con.close()
             else:
                 print("Unknown message: ", data)
 
@@ -109,18 +109,18 @@ if __name__ == '__main__':
                 data_str = ser.read(ser.inWaiting())
                 print(str(data_str))
                 LAST_VALS = str(data_str)
-                #stringtab = data_str.split(";")
-                #temperature = stringtab[0]
-                #light = stringtab[1]
-                #currenttime = time.time()
-                #con = sqlite3.connect('dbiot.db')
-                #cursor = con.cursor()
-                #sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
-                #data_tuple = (temperature, light, currenttime)
-                #cursor.execute(sql, data_tuple)
-                #con.commit()
-                #cursor.close()
-                #con.close()
+                stringtab = data_str.split(";")
+                temperature = stringtab[0]
+                light = stringtab[1]
+                currenttime = time.time()
+                con = sqlite3.connect('dbiot.db')
+                cursor = con.cursor()
+                sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
+                data_tuple = (temperature, light, currenttime)
+                cursor.execute(sql, data_tuple)
+                con.commit()
+                cursor.close()
+                con.close()
     except (KeyboardInterrupt, SystemExit):
         server.shutdown()
         server.server_close()

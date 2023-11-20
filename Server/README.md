@@ -32,5 +32,5 @@ Ce programme établit un serveur UDP pour la communication entre une application
 
 ## Base de Données
 
-Le programme enregistre les données reçues dans une base de données SQLite (`dbiot.db`). La table `data` stocke la température, la luminosité et l'horodatage.
 Le programme stock aussi l'odre d'affichage des donnée sur l'écran de la microbit dans la table `conf`.
+Le programme enregistre les données reçues dans une base de données SQLite (`dbiot.db`). La table `data` stocke la température, la luminosité et l'horodatage.
