@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String CELSIUS_SYMBOL = "°C";
-    private static final String PERCENTAGE_SYMBOL = "%";
+    private static final String PERCENTAGE_SYMBOL = " lux";
 
     private InetAddress address; // Structure Java décrivant une adresse résolue
     private DatagramSocket UDPSocket; // Structure Java permettant d'accéder au réseau
@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         element1 = findViewById(R.id.element1);
         element2 = findViewById(R.id.element2);
 
-        sensorValues.put("L", getString(R.string.luminosity_text));
         sensorValues.put("T", getString(R.string.temperature_text));
+        sensorValues.put("L", getString(R.string.luminosity_text));
 
-        element1.setText(sensorValues.get("L"));
-        element2.setText(sensorValues.get("T"));
+        element1.setText(sensorValues.get("T"));
+        element2.setText(sensorValues.get("L"));
 
         luminosityValue = findViewById(R.id.luminosity_value);
         temperatureValue = findViewById(R.id.temperature_value);
@@ -117,15 +117,16 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Received data: " + data);
 
             // check data integrity
+            data = data.replaceAll("[()\\s]","");
             if(data.isEmpty() || data.contains(" ") || data.equals("-1") || data.length() < 3) {
                 Log.e(TAG, "Error on server");
                 return;
             }
 
             // split and set received data in UI components
-            String[] parts = data.split(";");
-            temperatureValue.setText(String.format("%s%s", parts[1], CELSIUS_SYMBOL));
-            luminosityValue.setText(String.format("%s%s", parts[0], PERCENTAGE_SYMBOL));
+            String[] parts = data.split(",");
+            temperatureValue.setText(String.format("%s%s", parts[0], CELSIUS_SYMBOL));
+            luminosityValue.setText(String.format("%s%s", parts[1], PERCENTAGE_SYMBOL));
         });
         
         ListenThread listenThread = new ListenThread(listener, UDPSocket);
