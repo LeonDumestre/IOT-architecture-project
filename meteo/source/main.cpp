@@ -23,25 +23,28 @@ ssd1306 screen(&uBit, &i2c, &P0);
 bme280 bme(&uBit,&i2c);
 tsl256x tsl(&uBit, &i2c);
 
+string transit_radio;
+string transit_data;
+
 void onData(MicroBitEvent) {
-    ManagedString managed_temp_string = uBit.radio.datagram.recv();
-    string message = decrypt((char *) managed_temp_string.toCharArray(), key);
+    transit_radio = ((ManagedString) uBit.radio.datagram.recv()).toCharArray();
+    transit_radio = decrypt((char *) transit_radio.c_str(), key);
 
     //uBit.serial.printf("Received: %s\r\n", message.c_str());
     
     // Change position on screen according to the user choice
-    if(message == "L;T"){
+    if(transit_radio == "L;T"){
         xlux = 1;
         xtemp = 2;
-    } else if(message == "T;L"){
+    } else if(transit_radio == "T;L"){
         xlux = 2;
         xtemp = 1;
     }
 
     // Remove the ';' from the message
-    message.erase(remove(message.begin(), message.end(), ';'), message.end());
+    transit_radio.erase(remove(transit_radio.begin(), transit_radio.end(), ';'), transit_radio.end());
     //uBit.serial.printf("After erasing: %s\n", message.c_str());
-    strncpy(order, message.c_str(), 3);
+    strncpy(order, transit_radio.c_str(), 3);
 }
 
 // Convert a temperature in int to a string
@@ -50,27 +53,26 @@ string tempToString(int tmp) {
 }
 
 void sendData(int tmp, int lux) {
-    //uBit.serial.printf("senData\r\n");
-    string msg;
+    transit_data = "";
 
     for(size_t i=0; i<strlen(order); i++){
         if (i != 0) {
-            msg += ";";
+            transit_data += ";";
         }
         switch(order[i]) {
             case 'T':
-                msg += tempToString(tmp);
+                transit_data += tempToString(tmp);
             break;
             case 'L':
-                msg += to_string(lux);
+                transit_data += to_string(lux);
             break;
         }
     }
 
     //uBit.serial.printf("Cyphering: %s\r\n", msg.c_str());
 
-    string cyphered_msg = encrypt((char *) msg.c_str(), key);
-    uBit.radio.datagram.send((char*) cyphered_msg.c_str());
+    transit_data = encrypt((char *) transit_data.c_str(), key);
+    uBit.radio.datagram.send((char*) transit_data.c_str());
 }
 
 int main(){
@@ -103,7 +105,7 @@ int main(){
 
         sendData(tmp, lux);
 
-        uBit.sleep(1000);
+        uBit.sleep(10000);
     }
 
     release_fiber();
