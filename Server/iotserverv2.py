@@ -5,7 +5,7 @@ import serial
 import threading
 import sqlite3
 
-HOST = "192.168.1.23"
+HOST = "192.168.182.232"
 UDP_PORT = 10000
 MICRO_COMMANDS = ["T;L~", "L;T~"]
 DATABASE = "dbiot.db"
@@ -58,7 +58,7 @@ class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
 
 
 # send serial message
-SERIALPORT = "/dev/ttyACM1"
+SERIALPORT = "/dev/ttyACM0"
 BAUDRATE = 115200
 ser = serial.Serial()
 
