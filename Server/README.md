@@ -9,11 +9,6 @@ Ce programme établit un serveur UDP pour la communication entre une application
 - Python 3
 - Bibliothèque pyserial (`pip install pyserial`)
 
-## Installation
-
-1. Clonez le dépôt : `git clone https://github.com/votre/utilisateur/serveur-udp-serie.git`
-2. Accédez au répertoire du projet : `cd serveur-udp-serie`
-
 ## Utilisation
 
 1. Connectez le microcontrôleur au port série spécifié (`SERIALPORT`).
