@@ -35,8 +35,9 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
                         sendAndroidMessage(str(rows[0]), self.client_address)
                 except:
                     print("Error while reading from database.")
-            elif True:  # Send message through UART
+            else:  # Send message through UART
                 try:
+                    print("Trying to process message: " + data)
                     con = sqlite3.connect('dbiot.db')
                     cursor = con.cursor()
                     sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
@@ -50,8 +51,6 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
                     con.close()
                 except:
                     print("Error while writing to database.")
-            else:
-                print("Unknown message: ", data)
 
 
 class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
