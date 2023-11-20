@@ -12,7 +12,7 @@ Ce programme établit un serveur UDP pour la communication entre une application
 ## Utilisation
 
 1. Connectez le microcontrôleur au port série spécifié (`SERIALPORT`).
-2. Lancez le serveur : `python serveur.py`
+2. Lancez le serveur : `python iotserv.py`
 3. Le serveur écoutera les messages UDP sur l'adresse IP spécifiée (`HOST`) et le port (`UDP_PORT`).
 4. Envoyez des commandes depuis une application Android pour contrôler le microcontrôleur.
 
