@@ -4,27 +4,38 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class TalkThread extends Thread {
+public class AskValueThread extends Thread {
+
+    private static final int FIVE_SECONDS_IN_MS = 5000;
+    private static final String ASK_VALUE_CMD = "getValues()";
 
     private final int port;
     private final InetAddress address;
     private final DatagramSocket UDPSocket;
-    private final String messageToSend;
 
-    public TalkThread(String messageToSend, DatagramSocket UDPSocket, InetAddress address, int port) {
-        this.messageToSend = messageToSend;
+    public AskValueThread(DatagramSocket UDPSocket, InetAddress address, int port) {
         this.UDPSocket = UDPSocket;
         this.address = address;
         this.port = port;
     }
 
     public void run() {
-        sendMessage(messageToSend);
+        while (true) {
+            try {
+                sendMessage();
+                Thread.sleep(FIVE_SECONDS_IN_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage() {
         try {
-            byte[] data = message.getBytes();
+            byte[] data = ASK_VALUE_CMD.getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
             UDPSocket.send(packet);
         } catch (Exception e) {

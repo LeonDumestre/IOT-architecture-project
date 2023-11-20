@@ -7,4 +7,5 @@
     <string name="luminosity_text">Luminosité</string>
     <string name="temperature_text">Température</string>
     <string name="init_network_text">Initialiser le réseau</string>
+    <string name="sensor_received_data_title">Données reçues</string>
 </resources>
