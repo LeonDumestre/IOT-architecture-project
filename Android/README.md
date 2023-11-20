@@ -15,7 +15,7 @@ L'application initialise alors une nouvelle socket UDP et configure les paramèt
 
 ### Réception de Données de Capteurs
 
-L'application ANdroid est conçu pour recevoir des données de capteurs.
+L'application Android est conçu pour recevoir des données de capteurs.
 Actuellement, elle peut uniquement recevoir des données de lumière et de température.
 
 Le thread `AskValueThread` envoie en continu des requêtes demandant l'envoi de données.
@@ -23,11 +23,15 @@ Cela peremet à la cible d'envoyer les données de capteurs en réponse à la re
 Un thread d'écoute (`ListenThread`) est constamment en cours d'exécution, écoutant les données entrantes sur la socket UDP.
 Lorsqu'une nouvelle donnée est reçue, elle est traitée et affichée à l'utilisateur.
 
-### Échange d'Éléments d'Interface Utilisateur
+### Échange d'Éléments
 
 L'utilisateur peut échanger les éléments d'interface utilisateur en appuyant sur le bouton d'échange.
 Cette opération échange le texte affiché dans deux zones de texte spécifiques à l'interface utilisateur.
+
 Echanger les deux données envoie également une requête via `TalkThread` indiquant le nouvel ordre.
+
+Le message envoyé peut être `L;T~` ou `T;L~`.
+L'ordre des lettres indique l'ordre de l'affichage des données, `T` étant température et `L` luminosité.
 
 ## Structure du Code
 
