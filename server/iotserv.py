@@ -4,12 +4,22 @@ import socketserver
 import serial
 import threading
 import sqlite3
+import re
 
-HOST = "192.168.182.232"
+HOST = "192.168.1.23"
 UDP_PORT = 10000
 MICRO_COMMANDS = ["T;L~", "L;T~"]
 DATABASE = "dbiot.db"
 LAST_VALS = ""
+REGEX_DATA = r"^\d+\.\d+\;\d+~$"
+
+# send serial message
+SERIALPORT = "/dev/ttyACM0"
+BAUDRATE = 115200
+ser = serial.Serial()
+
+
+mutex = threading.Lock()
 
 
 class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
@@ -22,22 +32,29 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
         print("{}: client: {}, wrote: {}".format(current_thread.name, self.client_address, data))
         if data != "":
             if data == "getValues()":  # Sent last value received from micro-controller
-                #sendAndroidMessage(LAST_VALS, self.client_address)
                 try:
                     con = sqlite3.connect('dbiot.db')
                     cursor = con.cursor()
-                    sql = ''' SELECT * FROM data HAVING MAX(time) '''
+                    # select every data and only keep the first one (most recent)
+                    sql = ''' SELECT d.* FROM data d ORDER BY time DESC '''
                     cursor.execute(sql)
                     rows = cursor.fetchall()
                     if (len(rows) <= 0):
+                        # send empty string if there is an error
                         sendAndroidMessage(str(-1), self.client_address)
                     else:
+                        # send the first result
                         sendAndroidMessage(str(rows[0]), self.client_address)
-                except:
-                    print("Error while reading from database.")
+                    cursor.close()
+                    con.close()
+                except Exception as e:
+                    print("Error while reading from database: {}".format(e))
             else:  # Send message through UART
                 try:
                     print("Trying to process message: " + data)
+                    sendUARTMessage(data)
+
+                    # Open connection to db and and update the config of thermo, lux, etc.
                     con = sqlite3.connect('dbiot.db')
                     cursor = con.cursor()
                     sql = ''' UPDATE conf SET order = ? WHERE id = ? '''
@@ -45,22 +62,15 @@ class ThreadedUDPRequestHandler(socketserver.BaseRequestHandler):
                     fullstr = strvar[0] + strvar[1]
                     data_tuple = (str(fullstr), str(1))
                     cursor.execute(sql, data_tuple)
-                    sendUARTMessage(data)
                     con.commit()
                     cursor.close()
                     con.close()
-                except:
-                    print("Error while writing to database.")
+                except Exception as e:
+                    print("Error while writing to database: {}".format(e))
 
 
 class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
     pass
-
-
-# send serial message
-SERIALPORT = "/dev/ttyACM0"
-BAUDRATE = 115200
-ser = serial.Serial()
 
 
 def initUART():
@@ -87,7 +97,11 @@ def initUART():
 
 
 def sendUARTMessage(msg):
+    # lock the serial to not erase the infos
+    mutex.acquire()
     ser.write(str.encode(msg))
+    time.sleep(1) # ensure that the microbit has some time to read the buffer
+    mutex.release()
     print("Message <" + msg + "> sent to micro-controller.")
 
 
@@ -110,27 +124,39 @@ if __name__ == '__main__':
         server_thread.start()
         print("Server started at {} port {}".format(HOST, UDP_PORT))
         while ser.isOpen():
-            if ser.inWaiting() > 0:  # if incoming bytes are waiting
-                try:
-                    data_str = ser.read(ser.inWaiting())
-                    data_str = str(data_str).split("'")[1]
-                    print(str(data_str))
-                    LAST_VALS = str(data_str)
-                    stringtab = data_str.split(";")
-                    temperature = float(stringtab[0])
-                    light =  float(stringtab[1])
-                    print("temperature : " + temperature + " light : " + light)
-                    currenttime = time.time()
-                    con = sqlite3.connect('dbiot.db')
-                    cursor = con.cursor()
-                    sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
-                    data_tuple = (temperature, light, currenttime)
-                    cursor.execute(sql, data_tuple)
-                    con.commit()
-                    cursor.close()
-                    con.close()
-                except:
-                    print("Error while reading from serial port.")
+            try:
+                # lock the serial because we need it not to flush our input
+                mutex.acquire()
+                data_str = ser.read_until(b'~')
+                ser.flush()
+                mutex.release()
+                data_str = str(data_str).split("'")[1]
+
+                # if the serial input is not as expected, we ignore it
+                if re.match(REGEX_DATA, data_str) == False:
+                    pass
+
+                stringtab = data_str.replace("~", "").split(";")
+
+                temperature = float(stringtab[0])
+                light =  float(stringtab[1])
+                currenttime = time.time()
+
+                print("temperature : " + stringtab[0] + " light : " + stringtab[1])
+                
+                # open SGBD connection and insert data
+                con = sqlite3.connect('dbiot.db')
+                cursor = con.cursor()
+                sql = ''' INSERT INTO data(temp, light, time) VALUES(?,?,?) '''
+                data_tuple = (temperature, light, currenttime)
+                cursor.execute(sql, data_tuple)
+                con.commit()
+                cursor.close()
+                con.close()
+
+            except Exception as e:
+                print("Error while reading from serial port: {}".format(e))
+
     except (KeyboardInterrupt, SystemExit):
         server.shutdown()
         server.server_close()

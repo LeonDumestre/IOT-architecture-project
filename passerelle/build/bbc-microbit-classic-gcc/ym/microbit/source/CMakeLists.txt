@@ -2,14 +2,14 @@
 
 cmake_minimum_required(VERSION 3.0.0)
 
-include_directories("/home/leon.dumestre/IOT-architecture-project/passerelle/yotta_modules/microbit/source")
+include_directories("/home/slikie/IOT-architecture-project/passerelle/yotta_modules/microbit/source")
 
 
 set(YOTTA_AUTO_MICROBIT_CPP_FILES
-    "/home/leon.dumestre/IOT-architecture-project/passerelle/yotta_modules/microbit/source/MicroBit.cpp"
+    "/home/slikie/IOT-architecture-project/passerelle/yotta_modules/microbit/source/MicroBit.cpp"
 )
 # force dependency on the config header for cpp files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_MICROBIT_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/yotta_config.h")
+set_property(SOURCE ${YOTTA_AUTO_MICROBIT_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/yotta_config.h")
 
 
 add_library(microbit

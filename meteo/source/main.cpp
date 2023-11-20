@@ -10,9 +10,9 @@ char order[3] = "TL";
 
 uint8_t key[16] = { 0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c };
 
-const string BLANK = "                ";
+const string BLANK = "         ";
 uint8_t xtemp = 1;
-uint8_t xlux = 2;
+uint8_t xlux = 3;
 
 MicroBit uBit;
 MicroBitI2C i2c(I2C_SDA0,I2C_SCL0);
@@ -23,28 +23,26 @@ ssd1306 screen(&uBit, &i2c, &P0);
 bme280 bme(&uBit,&i2c);
 tsl256x tsl(&uBit, &i2c);
 
-string transit_radio;
-string transit_data;
-
 void onData(MicroBitEvent) {
-    transit_radio = ((ManagedString) uBit.radio.datagram.recv()).toCharArray();
-    transit_radio = decrypt((char *) transit_radio.c_str(), key);
+    uBit.display.scroll("R");
+    ManagedString managed_temp_string = uBit.radio.datagram.recv();
+    string message = decrypt((char *) managed_temp_string.toCharArray(), key);
 
     //uBit.serial.printf("Received: %s\r\n", message.c_str());
     
     // Change position on screen according to the user choice
-    if(transit_radio == "L;T"){
+    if(message == "L;T"){
         xlux = 1;
-        xtemp = 2;
-    } else if(transit_radio == "T;L"){
-        xlux = 2;
+        xtemp = 3;
+    } else if(message == "T;L"){
+        xlux = 3;
         xtemp = 1;
     }
 
     // Remove the ';' from the message
-    transit_radio.erase(remove(transit_radio.begin(), transit_radio.end(), ';'), transit_radio.end());
+    //message.erase(remove(message.begin(), message.end(), ';'), message.end());
     //uBit.serial.printf("After erasing: %s\n", message.c_str());
-    strncpy(order, transit_radio.c_str(), 3);
+    //strncpy(order, message.c_str(), 3);
 }
 
 // Convert a temperature in int to a string
@@ -53,26 +51,30 @@ string tempToString(int tmp) {
 }
 
 void sendData(int tmp, int lux) {
-    transit_data = "";
+    //uBit.serial.printf("senData\r\n");
+    string msg;
 
     for(size_t i=0; i<strlen(order); i++){
         if (i != 0) {
-            transit_data += ";";
+            msg += ";";
         }
         switch(order[i]) {
             case 'T':
-                transit_data += tempToString(tmp);
+                msg += tempToString(tmp);
             break;
             case 'L':
-                transit_data += to_string(lux);
+                msg += to_string(lux);
             break;
         }
     }
 
+
+    //uBit.display.scroll("S");
+
     //uBit.serial.printf("Cyphering: %s\r\n", msg.c_str());
 
-    transit_data = encrypt((char *) transit_data.c_str(), key);
-    uBit.radio.datagram.send((char*) transit_data.c_str());
+    string cyphered_msg = encrypt((char *) msg.c_str(), key);
+    uBit.radio.datagram.send((char*) cyphered_msg.c_str());
 }
 
 int main(){
@@ -93,7 +95,7 @@ int main(){
         int tmp = bme.compensate_temperature(temp);
         
         string temperature_str = tempToString(tmp);
-        string message_temperature = ("thermo:" + temperature_str + " C" + BLANK);
+        string message_temperature = ("therm:" + temperature_str + " C" + BLANK);
 
 
         screen.display_line(xtemp, 0, message_temperature.c_str());

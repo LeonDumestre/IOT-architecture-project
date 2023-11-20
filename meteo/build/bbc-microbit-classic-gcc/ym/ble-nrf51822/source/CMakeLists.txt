@@ -2,56 +2,56 @@
 
 cmake_minimum_required(VERSION 3.0.0)
 
-include_directories("/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source")
+include_directories("/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source")
 
 
-set(YOTTA_AUTO_BLE-NRF51822_CPP_FILES
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattServer.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_advertising.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_gap.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattClient.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xn.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_discovery.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xCharacteristicDescriptorDiscoverer.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xDiscoveredCharacteristic.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_security.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xServiceDiscovery.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/custom/custom_helper.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGap.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle.cpp"
-)
-# force dependency on the config header for cpp files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_BLE-NRF51822_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
 set(YOTTA_AUTO_BLE-NRF51822_HEADER_FILES
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xSecurityManager.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_gap.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_discovery.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/custom/custom_helper.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattServer.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xCharacteristicDescriptorDiscoverer.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattClient.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_security.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/ansi_escape.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xn.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xServiceDiscovery.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/assertion.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/common.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/binary.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/compiler.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/ble_error.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xDiscoveredCharacteristic.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/projectconfig.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGap.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_advertising.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xCharacteristicDescriptorDiscoverer.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xn.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattServer.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xDiscoveredCharacteristic.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xSecurityManager.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_security.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/projectconfig.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattClient.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_advertising.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_discovery.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_gap.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/custom/custom_helper.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/common.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/compiler.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xServiceDiscovery.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/ble_error.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/binary.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/assertion.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/common/ansi_escape.h"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGap.h"
 )
 # force dependency on the config header for header files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_BLE-NRF51822_HEADER_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
+set_property(SOURCE ${YOTTA_AUTO_BLE-NRF51822_HEADER_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
+set(YOTTA_AUTO_BLE-NRF51822_CPP_FILES
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xCharacteristicDescriptorDiscoverer.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_gap.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_advertising.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/custom/custom_helper.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xn.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattServer.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGap.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xServiceDiscovery.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_discovery.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xGattClient.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/btle/btle_security.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/nRF5xDiscoveredCharacteristic.cpp"
+)
+# force dependency on the config header for cpp files, which CMake otherwise wouldn't track:
+set_property(SOURCE ${YOTTA_AUTO_BLE-NRF51822_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
 
 
 add_library(ble-nrf51822
-    ${YOTTA_AUTO_BLE-NRF51822_CPP_FILES}
     ${YOTTA_AUTO_BLE-NRF51822_HEADER_FILES}
+    ${YOTTA_AUTO_BLE-NRF51822_CPP_FILES}
 )
 
 yotta_postprocess_target(LIBRARY ble-nrf51822)
@@ -63,4 +63,4 @@ target_link_libraries(ble-nrf51822
     nrf51-sdk
 )
 
-include("/home/leon.dumestre/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/supress-warnings.cmake")
+include("/home/slikie/IOT-architecture-project/meteo/yotta_modules/ble-nrf51822/source/supress-warnings.cmake")

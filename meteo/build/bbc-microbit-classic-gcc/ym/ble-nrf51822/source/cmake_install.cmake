@@ -1,4 +1,4 @@
-# Install script for directory: /home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/ym/ble-nrf51822/source
+# Install script for directory: /home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/ym/ble-nrf51822/source
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

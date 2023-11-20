@@ -1,4 +1,4 @@
-# Install script for directory: /home/leon.dumestre/IOT-architecture-project/passerelle/yotta_modules/mbed-classic
+# Install script for directory: /home/slikie/IOT-architecture-project/passerelle/yotta_modules/mbed-classic
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

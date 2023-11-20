@@ -1,4 +1,4 @@
-# Install script for directory: /home/leon.dumestre/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/ym/microbit/source
+# Install script for directory: /home/slikie/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/ym/microbit/source
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

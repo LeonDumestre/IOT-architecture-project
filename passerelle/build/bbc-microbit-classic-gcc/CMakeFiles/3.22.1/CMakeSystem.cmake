@@ -1,9 +1,9 @@
-set(CMAKE_HOST_SYSTEM "Linux-6.2.0-35-generic")
+set(CMAKE_HOST_SYSTEM "Linux-6.2.0-36-generic")
 set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "6.2.0-35-generic")
+set(CMAKE_HOST_SYSTEM_VERSION "6.2.0-36-generic")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
-include("/home/leon.dumestre/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/toolchain.cmake")
+include("/home/slikie/IOT-architecture-project/passerelle/build/bbc-microbit-classic-gcc/toolchain.cmake")
 
 set(CMAKE_SYSTEM "mbedOS-1")
 set(CMAKE_SYSTEM_NAME "mbedOS")

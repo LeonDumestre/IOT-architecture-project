@@ -2,39 +2,39 @@
 
 cmake_minimum_required(VERSION 3.0.0)
 
-include_directories("/home/leon.dumestre/IOT-architecture-project/meteo/source")
+include_directories("/home/slikie/IOT-architecture-project/meteo/source")
 
 
-set(YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/aes.c"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/ssd1306.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/bme280.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/crypt.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/main.cpp"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/tsl256x.cpp"
-)
-# force dependency on the config header for cpp files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
 set(YOTTA_AUTO_MICROBIT-SAMPLES_C_FILES
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/aes.c"
+    "/home/slikie/IOT-architecture-project/meteo/source/aes.c"
 )
 # force dependency on the config header for c files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_C_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
+set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_C_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
 set(YOTTA_AUTO_MICROBIT-SAMPLES_HEADER_FILES
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/font.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/ssd1306.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/tsl256x.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/aes.h"
-    "/home/leon.dumestre/IOT-architecture-project/meteo/source/bme280.h"
+    "/home/slikie/IOT-architecture-project/meteo/source/aes.h"
+    "/home/slikie/IOT-architecture-project/meteo/source/bme280.h"
+    "/home/slikie/IOT-architecture-project/meteo/source/ssd1306.h"
+    "/home/slikie/IOT-architecture-project/meteo/source/tsl256x.h"
+    "/home/slikie/IOT-architecture-project/meteo/source/font.h"
 )
 # force dependency on the config header for header files, which CMake otherwise wouldn't track:
-set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_HEADER_FILES} PROPERTY OBJECT_DEPENDS "/home/leon.dumestre/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
+set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_HEADER_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
+set(YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES
+    "/home/slikie/IOT-architecture-project/meteo/source/main.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/source/bme280.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/source/tsl256x.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/source/ssd1306.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/source/crypt.cpp"
+    "/home/slikie/IOT-architecture-project/meteo/source/aes.c"
+)
+# force dependency on the config header for cpp files, which CMake otherwise wouldn't track:
+set_property(SOURCE ${YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES} PROPERTY OBJECT_DEPENDS "/home/slikie/IOT-architecture-project/meteo/build/bbc-microbit-classic-gcc/yotta_config.h")
 
 
 add_executable (microbit-samples
-    ${YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES}
     ${YOTTA_AUTO_MICROBIT-SAMPLES_C_FILES}
     ${YOTTA_AUTO_MICROBIT-SAMPLES_HEADER_FILES}
+    ${YOTTA_AUTO_MICROBIT-SAMPLES_CPP_FILES}
 )
 set_target_properties(microbit-samples PROPERTIES ENABLE_EXPORTS ON)
 
