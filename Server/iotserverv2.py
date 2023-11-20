@@ -119,6 +119,7 @@ if __name__ == '__main__':
                     stringtab = data_str.split(";")
                     temperature = float(stringtab[0])
                     light =  float(stringtab[1])
+                    print("temperature : " + temperature + " light : " + light)
                     currenttime = time.time()
                     con = sqlite3.connect('dbiot.db')
                     cursor = con.cursor()
